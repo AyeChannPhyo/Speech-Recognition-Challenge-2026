@@ -14,13 +14,18 @@ submission/Team_<팀대표이름>_<학번>.html
 
 #### 과제는 HTML 페이지 형태로 구성하며, 아래 항목은 반드시 포함해야 합니다.
 
-1. **메인화면**: `index.html`
-2. **Challenge 설명**: Challenge 개요 및 프로젝트 내용
-3. **Leaderboard**: 벤치마크 결과 및 성능 비교
-4. 개인 GitHub 링크: 아래 항목을 포함한 Repository
-5. Baseline 코드
-6. Dataset(Evaluation용 데이터셋 필수 포함)
-7. Evaluation: 모델 평가 방법 및 관련 코드
+<ol>
+  <li><strong>메인화면</strong>: <code>index.html</code></li>
+  <li><strong>Challenge 설명</strong>: Challenge 개요 및 프로젝트 내용</li>
+  <li><strong>Leaderboard</strong>: 벤치마크 결과 및 성능 비교</li>
+  <li>개인 GitHub 링크: 아래 항목을 포함한 Repository
+    <ol type="a">
+      <li>Baseline 코드</li>
+      <li>Dataset(Evaluation용 데이터셋 필수 포함)</li>
+      <li>Evaluation: 모델 평가 방법 및 관련 코드</li>
+    </ol>
+  </li>
+</ol>
 
 ## 제출 방법
 
