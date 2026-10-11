@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Fine-Grained Emotional TTS Challenge 학생 제출 예시" />
+    <title>Fine-Grained Emotional TTS Challenge · Team_sample</title>
+    <style>
+      :root {
+        --ink: #24283b;
+        --muted: #626878;
+        --accent: #9b4327;
+        --link: #345f9d;
+        --page: #ffffff;
+        --canvas: #f2f2f7;
+        --soft: #f7f8fb;
+        --line: #dfe2e8;
+        --code: #202536;
+        --sans: Inter, Pretendard, "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+        --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; scroll-padding-top: 20px; }
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: var(--canvas);
+        font-family: var(--sans);
+        font-size: 16px;
+        line-height: 1.7;
+        -webkit-font-smoothing: antialiased;
+      }
+      a { color: var(--link); }
+      code { font-family: var(--mono); }
+
+      .skip-link {
+        position: fixed;
+        z-index: 100;
+        top: 8px;
+        left: 8px;
+        padding: 8px 12px;
+        color: #fff;
+        background: var(--ink);
+        transform: translateY(-150%);
+      }
+      .skip-link:focus { transform: translateY(0); }
+
+      .page-shell {
+        width: min(1000px, calc(100% - 40px));
+        min-height: 100vh;
+        margin: 24px auto;
+        background: var(--page);
+        border: 1px solid #e7e8ed;
+        border-radius: 10px;
+        box-shadow: 0 8px 28px rgba(31, 37, 55, .07);
+      }
+
+      .site-header {
+        display: grid;
+        grid-template-columns: minmax(330px, 1fr) minmax(440px, 1.25fr);
+        gap: 28px;
+        align-items: end;
+        margin: 0 32px;
+        padding: 24px 0 18px;
+        border-bottom: 1px solid var(--line);
+      }
+      .site-title {
+        display: block;
+        color: var(--ink);
+        font-size: clamp(22px, 2.8vw, 30px);
+        font-weight: 800;
+        line-height: 1.18;
+        letter-spacing: -.025em;
+        text-decoration: none;
+      }
+      nav { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px 16px; }
+      nav a { color: #555b69; font-size: 12px; font-weight: 650; text-decoration: none; white-space: nowrap; }
+      nav a:hover, nav a:focus-visible, .source-link { color: var(--accent); }
+
+      main { padding: 0 32px 48px; }
+      .hero { padding: 34px 0 38px; }
+      .content-section { padding: 34px 0; border-top: 1px solid var(--line); scroll-margin-top: 20px; }
+
+      h1, h2, h3 { color: var(--ink); line-height: 1.25; }
+      h1 { margin: 0; font-size: clamp(30px, 4.6vw, 42px); letter-spacing: -.035em; }
+      h2 { margin: 0 0 15px; font-size: 26px; letter-spacing: -.02em; }
+      h3 { margin: 22px 0 10px; font-size: 18px; }
+      p { margin: 0 0 16px; }
+
+      .team-members { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
+      .team-members strong { margin-right: 8px; color: var(--ink); }
+
+      .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        margin: 24px 0 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+      }
+      .summary-grid div { min-width: 0; padding: 14px 16px; border-right: 1px solid var(--line); }
+      .summary-grid div:last-child { border-right: 0; }
+      .summary-grid dt { color: var(--muted); font-size: 11px; font-weight: 750; text-transform: uppercase; }
+      .summary-grid dd { margin: 3px 0 0; overflow-wrap: anywhere; font-family: var(--mono); font-size: 13px; font-weight: 750; }
+
+      .example-box {
+        display: grid;
+        grid-template-columns: 105px 1fr;
+        gap: 16px;
+        margin-top: 14px;
+        padding: 16px 18px;
+        background: var(--soft);
+        border-left: 4px solid var(--accent);
+      }
+      .example-box strong { font-size: 13px; }
+      .example-box p { margin: 0; color: #4b5261; }
+
+      .method-list {
+        margin: 18px 0 0;
+        padding: 0;
+        list-style: none;
+        counter-reset: method-step;
+      }
+      .method-list > li {
+        position: relative;
+        margin-bottom: 18px;
+        padding-left: 38px;
+        counter-increment: method-step;
+      }
+      .method-list > li::before {
+        content: counter(method-step) ".";
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: var(--accent);
+        font-family: var(--mono);
+        font-weight: 800;
+      }
+      .method-list strong { display: block; font-size: 17px; }
+      .method-list p { margin: 3px 0 0; color: var(--muted); font-size: 14px; }
+      .method-list a { font-weight: 700; }
+
+      .table-wrap { margin-top: 20px; overflow-x: auto; border: 1px solid var(--line); border-radius: 5px; }
+      table { width: 100%; min-width: 620px; border-collapse: collapse; }
+      th, td { padding: 12px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+      th { color: #4f5564; background: var(--soft); font-size: 12px; font-weight: 800; }
+      td { color: #414757; font-size: 13px; }
+      tbody tr:last-child td { border-bottom: 0; }
+
+      .pipeline {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr auto 1fr;
+        gap: 12px;
+        align-items: center;
+        margin-top: 20px;
+      }
+      .pipeline div { min-width: 0; padding: 16px; background: var(--soft); border: 1px solid var(--line); border-radius: 6px; }
+      .pipeline span { display: block; color: var(--accent); font-family: var(--mono); font-size: 10px; font-weight: 800; }
+      .pipeline strong { display: block; margin-top: 8px; font-size: 16px; }
+      .pipeline small { display: block; margin-top: 3px; color: var(--muted); }
+      .pipeline i { color: #9ca2af; font-style: normal; }
+
+      .metric-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+      .metric-grid article { padding: 18px 20px; background: var(--soft); border: 1px solid var(--line); border-radius: 5px; }
+      .metric-grid span { color: var(--accent); font-family: var(--mono); font-size: 11px; font-weight: 800; text-transform: uppercase; }
+      .metric-grid h3 { margin: 5px 0; font-family: var(--mono); font-size: 19px; }
+      .metric-grid p { margin: 0; color: var(--muted); font-size: 13px; }
+
+      .leaderboard td:nth-child(1),
+      .leaderboard td:nth-child(3),
+      .leaderboard td:nth-child(4) { font-family: var(--mono); font-weight: 750; }
+      .leaderboard .winner td { background: #f3f8f4; }
+
+      .reference-list { margin: 20px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+      .reference-list li { padding: 12px 0; border-bottom: 1px solid var(--line); }
+      .reference-list a { font-weight: 750; }
+
+      footer { margin: 0 32px; padding: 20px 0 24px; color: var(--muted); border-top: 1px solid var(--line); font-size: 12px; }
+      footer strong { color: var(--ink); }
+      :focus-visible { outline: 3px solid #edb14f; outline-offset: 3px; }
+
+      @media (max-width: 820px) {
+        .site-header { grid-template-columns: 1fr; align-items: start; }
+        nav { justify-content: flex-start; }
+        .summary-grid { grid-template-columns: 1fr 1fr; }
+        .summary-grid div:nth-child(2) { border-right: 0; }
+        .summary-grid div:nth-child(-n + 2) { border-bottom: 1px solid var(--line); }
+        .pipeline { grid-template-columns: 1fr; }
+        .pipeline i { display: none; }
+      }
+
+      @media (max-width: 600px) {
+        body { background: var(--page); font-size: 15px; }
+        .page-shell { width: 100%; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+        .site-header { margin-inline: 20px; padding-top: 20px; gap: 16px; }
+        nav { gap: 6px 14px; }
+        main { padding: 0 20px 36px; }
+        .hero { padding-block: 28px 32px; }
+        .summary-grid, .metric-grid { grid-template-columns: 1fr; }
+        .summary-grid div { border-right: 0; border-bottom: 1px solid var(--line); }
+        .summary-grid div:last-child { border-bottom: 0; }
+        .example-box { grid-template-columns: 1fr; gap: 4px; }
+        .content-section { padding-block: 30px; }
+        footer { margin-inline: 20px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        html { scroll-behavior: auto; }
+      }
+    </style>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">본문으로 바로가기</a>
+
+    <div class="page-shell">
+      <header class="site-header" id="top">
+        <a class="site-title" href="#top">Fine-Grained Emotional TTS Challenge</a>
+        <nav aria-label="Challenge 메뉴">
+          <a href="#goal">Goal</a>
+          <a href="#method">Method</a>
+          <a href="#dataset">Dataset</a>
+          <a href="#evaluation">Evaluation Setup</a>
+          <a href="#leaderboard">Leaderboard</a>
+          <a href="#references">References</a>
+          <a class="source-link" href="https://github.com/YOUR_GITHUB_ID/YOUR_REPOSITORY">개인 GitHub ↗</a>
+        </nav>
+      </header>
+
+      <main id="main">
+        <section class="hero">
+          <h1>Fine-Grained Emotional TTS Challenge</h1>
+          <p class="team-members"><strong>Team Members</strong> student1 · student2 · student3</p>
+
+          <dl class="summary-grid" aria-label="Challenge 요약">
+            <div><dt>Task</dt><dd>Emotional TTS</dd></div>
+            <div><dt>Train</dt><dd>Expresso</dd></div>
+            <div><dt>Evaluation</dt><dd>ESD</dd></div>
+            <div><dt>Metric</dt><dd>Emotion Accuracy · NISQA</dd></div>
+          </dl>
+        </section>
+
+        <section class="content-section" id="goal">
+          <h2>Goal</h2>
+          <div class="example-box">
+            <strong>작성 안내</strong>
+            <p>만들고 싶은 기능과 해결할 문제를 1~2문장으로 작성합니다.</p>
+          </div>
+          <div class="example-box">
+            <strong>작성 예시</strong>
+            <p>텍스트와 목표 감정을 입력받아 해당 감정이 표현된 음성을 생성하는 TTS 시스템을 구현합니다.</p>
+          </div>
+        </section>
+
+        <section class="content-section" id="method">
+          <h2>Method</h2>
+          <div class="example-box">
+            <strong>작성 안내</strong>
+            <p>사용한 모델과 주요 처리 단계를 순서대로 적고, 코드나 모델 링크를 함께 연결합니다.</p>
+          </div>
+
+          <ol class="method-list">
+            <li>
+              <strong>Base TTS 모델 선택</strong>
+              <p><a href="https://github.com/SparkAudio/Spark-TTS">Spark-TTS</a>를 Base model로 사용합니다.</p>
+            </li>
+            <li>
+              <strong>감정 음성 Fine-tuning</strong>
+              <p>Expresso 학습 데이터로 감정과 강조 표현을 학습합니다. <a href="https://github.com/YOUR_GITHUB_ID/YOUR_REPOSITORY/tree/main/preprocessing">본인 GitHub 코드</a></p>
+            </li>
+            <li>
+              <strong>감정 제어 성능 평가</strong>
+              <p>ESD와 emotion2vec-plus-large를 사용해 목표 감정과 생성 음성의 일치도를 평가합니다. <a href="https://github.com/YOUR_GITHUB_ID/YOUR_REPOSITORY/tree/main/evaluation">본인 GitHub 평가 코드</a></p>
+            </li>
+          </ol>
+
+          <div class="pipeline" aria-label="입력에서 출력까지의 전체 흐름">
+            <div><span>INPUT</span><strong>Text + Emotion</strong><small>텍스트와 목표 감정</small></div>
+            <i aria-hidden="true">→</i>
+            <div><span>PROCESS</span><strong>Fine-tuned Spark-TTS</strong><small>감정 제어 음성 합성</small></div>
+            <i aria-hidden="true">→</i>
+            <div><span>OUTPUT</span><strong>Emotional Speech</strong><small>WAV 음성</small></div>
+          </div>
+        </section>
+
+        <section class="content-section" id="dataset">
+          <h2>Dataset</h2>
+          <div class="table-wrap" role="region" aria-label="Dataset 구성" tabindex="0">
+            <table>
+              <thead>
+                <tr><th>Dataset</th><th>Split</th><th>Usage</th><th>Preprocessing Code</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Expresso</strong></td>
+                  <td>Train</td>
+                  <td>감정 및 강조 표현 학습</td>
+                  <td><a href="https://github.com/YOUR_GITHUB_ID/YOUR_REPOSITORY/tree/main/preprocessing">본인 깃허브 전처리코드 링크</a></td>
+                </tr>
+                <tr>
+                  <td><strong>ESD</strong></td>
+                  <td>Evaluation</td>
+                  <td>감정별 음성 평가</td>
+                  <td><a href="https://github.com/YOUR_GITHUB_ID/YOUR_REPOSITORY/tree/main/preprocessing">본인 깃허브 전처리코드 링크</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-section" id="evaluation">
+          <h2>Evaluation Setup</h2>
+          <div class="metric-grid">
+            <article>
+              <span>Evaluation model</span>
+              <h3>emotion2vec-plus-large</h3>
+              <p>생성 음성의 감정을 분류해 Emotion Accuracy를 계산합니다.</p>
+            </article>
+            <article>
+              <span>Evaluation model</span>
+              <h3>NISQA</h3>
+              <p>생성 음성의 객관적인 품질을 평가합니다.</p>
+            </article>
+          </div>
+          <div class="example-box">
+            <strong>작성 예시</strong>
+            <p><code>happy</code>, <code>angry</code>, <code>sadness</code>, <code>surprise</code>, <code>fearful</code>, <code>neutral</code> 각 100개씩, 총 600개의 감정 데이터를 사용하여 평가했습니다.</p>
+          </div>
+        </section>
+
+        <section class="content-section" id="leaderboard">
+          <h2>Leaderboard</h2>
+          <div class="table-wrap" role="region" aria-label="Benchmark 결과 예시" tabindex="0">
+            <table class="leaderboard">
+              <thead>
+                <tr><th>Rank</th><th>Model</th><th>Emotion Accuracy ↑</th><th>NISQA ↑</th></tr>
+              </thead>
+              <tbody>
+                <tr class="winner"><td>1</td><td><strong>EMORL-TTS</strong></td><td>0.88</td><td>4.11</td></tr>
+                <tr><td>2</td><td><strong>EMORL-TTS w/o GRPO</strong></td><td>0.81</td><td>4.11</td></tr>
+                <tr><td>—</td><td><strong>Spark-TTS</strong></td><td>—</td><td>4.15</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-section" id="references">
+          <h2>References</h2>
+          <ol class="reference-list">
+            <li><a href="https://arxiv.org/abs/2510.05758">EMORL-TTS paper</a></li>
+            <li><a href="https://speechbot.github.io/expresso/">Expresso</a></li>
+            <li><a href="https://github.com/HLTSingapore/Emotional-Speech-Data">ESD</a></li>
+            <li><a href="https://github.com/SparkAudio/Spark-TTS">Spark-TTS</a></li>
+          </ol>
+        </section>
+      </main>
+
+      <footer><strong>Team_sample_202624123</strong></footer>
+    </div>
+  </body>
+</html>
