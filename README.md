@@ -47,11 +47,11 @@ Copy-Item submission/Team_sample_202624123.html submission/Team_hongildong_20261
 ```text
 Challenge 제목 · 팀 구성원
         ↓
-Goal
-        ↓
-Method (번호별 단계와 관련 링크)
+Challenge Description
         ↓
 Input → Processing → Output
+        ↓
+Baseline & Method (번호별 단계와 관련 링크)
         ↓
 Dataset → Evaluation Setup → Leaderboard → References
 ```
@@ -66,7 +66,7 @@ Fine-Grained Emotional TTS Challenge
 Team Members: student1 (202600001) · student2 (202600002) · student3 (202600003)
 ```
 
-#### 3-2. Goal
+#### 3-2. Challenge Description
 
 해결하려는 문제와 최종 결과를 1~2문장으로 설명합니다.
 
@@ -74,7 +74,15 @@ Team Members: student1 (202600001) · student2 (202600002) · student3 (20260000
 텍스트와 목표 감정을 입력받아 해당 감정이 표현된 음성을 생성합니다.
 ```
 
-#### 3-3. Method
+#### 3-3. 입력 → 처리 → 출력 흐름도
+
+입력, 핵심 처리 과정, 출력을 한눈에 볼 수 있는 흐름도를 넣습니다. 별도 이미지 파일을 추가하지 말고 샘플 HTML의 파이프라인 영역처럼 HTML과 CSS로 작성합니다.
+
+```text
+Text + Emotion → Spark-TTS → Generated Speech
+```
+
+#### 3-4. Baseline & Method
 
 전체 방법을 실행 순서에 따라 번호로 나누어 작성합니다. 각 단계에는 사용한 모델이나 도구를 적고, 논문·공식 저장소·본인 GitHub 코드 링크를 연결합니다.
 
@@ -92,14 +100,6 @@ Team Members: student1 (202600001) · student2 (202600002) · student3 (20260000
 
 ```html
 <a href="https://github.com/SparkAudio/Spark-TTS">Spark-TTS</a>
-```
-
-#### 3-4. 입력 → 처리 → 출력 흐름도
-
-입력, 핵심 처리 과정, 출력을 한눈에 볼 수 있는 흐름도를 넣습니다. 별도 이미지 파일을 추가하지 말고 샘플 HTML의 파이프라인 영역처럼 HTML과 CSS로 작성합니다.
-
-```text
-Text + Emotion → Spark-TTS → Generated Speech
 ```
 
 #### 3-5. Dataset
