@@ -10,27 +10,17 @@
 submission/Team_<팀대표이름>_<학번>.html
 ```
 
-## HTML 필수 구성
+### 2. 과제 제출 내용
 
-제출 HTML에는 아래 항목을 순서대로 작성합니다.
+#### 과제는 HTML 페이지 형태로 구성하며, 아래 항목은 반드시 포함해야 합니다.
 
-1. Challenge 제목 및 팀 구성원
-2. Challenge Description
-3. 입력 → 모델 → 출력 흐름
-4. Baseline & Method
-5. Dataset
-6. Evaluation Setup
-7. Leaderboard
-8. References
-
-다음 제출 조건을 지켜야 합니다.
-
-- 팀별 주제, 방법, Dataset과 실험 결과를 직접 작성합니다.
-- 사용한 모델, 논문, Dataset과 본인 코드의 링크를 연결합니다.
-- Dataset의 학습용·평가용 구분과 평가 지표를 명시합니다.
-- Baseline과 제안 방법을 같은 Evaluation Setup으로 비교합니다.
-- 스타일은 HTML 내부의 `<style>`에 작성합니다.
-- 별도 CSS, JavaScript, 이미지 또는 제출용 하위 폴더는 추가하지 않습니다.
+1. **메인화면**: `index.html`
+2. **Challenge 설명**: Challenge 개요 및 프로젝트 내용
+3. **Leaderboard**: 벤치마크 결과 및 성능 비교
+4. 개인 GitHub 링크: 아래 항목을 포함한 Repository
+5. Baseline 코드
+6. Dataset(Evaluation용 데이터셋 필수 포함)
+7. Evaluation: 모델 평가 방법 및 관련 코드
 
 ## 제출 방법
 
