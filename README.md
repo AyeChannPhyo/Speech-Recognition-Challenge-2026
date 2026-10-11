@@ -19,7 +19,7 @@ submission/Team_<팀대표이름>_<학번>.html
   <li><strong>Challenge 설명</strong>: Challenge 개요 및 프로젝트 내용</li>
   <li><strong>Leaderboard</strong>: 벤치마크 결과 및 성능 비교</li>
   <li>개인 GitHub 링크: 아래 항목을 포함한 Repository
-    <ol type="a">
+    <ol type="a" style="list-style-type: lower-alpha;">
       <li>Baseline 코드</li>
       <li>Dataset(Evaluation용 데이터셋 필수 포함)</li>
       <li>Evaluation: 모델 평가 방법 및 관련 코드</li>
