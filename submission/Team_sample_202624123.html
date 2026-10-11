@@ -56,6 +56,23 @@
         box-shadow: 0 8px 28px rgba(31, 37, 55, .07);
       }
 
+      .sample-notice {
+        margin: 0;
+        padding: 18px 32px;
+        color: #3b2500;
+        background: #fff2bf;
+        border-bottom: 1px solid #e1bd4e;
+        border-radius: 10px 10px 0 0;
+        font-size: 15px;
+        line-height: 1.55;
+      }
+      .sample-notice strong {
+        display: block;
+        margin-bottom: 2px;
+        color: #7a3500;
+        font-size: 18px;
+      }
+
       .site-header {
         display: grid;
         grid-template-columns: minmax(330px, 1fr) minmax(440px, 1.25fr);
@@ -193,6 +210,7 @@
       @media (max-width: 600px) {
         body { background: var(--page); font-size: 15px; }
         .page-shell { width: 100%; margin: 0; border: 0; border-radius: 0; box-shadow: none; }
+        .sample-notice { padding: 16px 20px; border-radius: 0; }
         .site-header { margin-inline: 20px; padding-top: 20px; gap: 16px; }
         nav { gap: 6px 14px; }
         main { padding: 0 20px 36px; }
@@ -214,6 +232,11 @@
     <a class="skip-link" href="#main">본문으로 바로가기</a>
 
     <div class="page-shell">
+      <aside class="sample-notice" aria-label="샘플 페이지 안내">
+        <strong>참고용 예시 — 그대로 따라 하거나 복사하지 마세요.</strong>
+        이 양식은 HTML 구성과 작성 흐름만 보여 주는 샘플입니다. 주제, 내용, 모델, Dataset, 수치와 결과는 팀별로 직접 작성하세요.
+      </aside>
+
       <header class="site-header" id="top">
         <a class="site-title" href="#top">Fine-Grained Emotional TTS Challenge</a>
         <nav aria-label="Challenge 메뉴">

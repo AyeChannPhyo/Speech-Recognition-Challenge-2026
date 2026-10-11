@@ -2,6 +2,8 @@
 
 학생은 `submission/` 폴더에 **HTML 파일 1개만** 추가한 뒤 Pull Request(PR)로 제출합니다.
 
+[GitHub Pages에서 샘플 HTML 보기](https://lsh-ajou.github.io/Speech-Recognition-Challenge-2026/)
+
 파일명은 아래 형식을 사용합니다.
 
 ```text
