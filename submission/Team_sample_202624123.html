@@ -499,7 +499,7 @@
                 <span>TASK 1</span>
                 <div>
                 <h3>Emotion Category Control</h3>
-                <p>텍스트와 감정 라벨을 입력받아 happy, angry, sadness, surprise, fearful, neutral 중 목표 감정이 인식되는 음성을 생성합니다.</p>
+                <p>텍스트와 감정 라벨을 입력받아 happy, angry, sadness, surprise, neutral 중 목표 감정이 인식되는 음성을 생성합니다.</p>
                 </div>
               </article>
               <article class="task-item">
@@ -577,17 +577,10 @@
                     <td>감정별 생성 음성 평가</td>
                     <td><a href="https://github.com/YOUR_GITHUB_ID/YOUR_REPOSITORY/tree/main/preprocessing/esd">Preprocessing</a></td>
                   </tr>
-                  <tr>
-                    <td><a href="https://github.com/YOUR_GITHUB_ID/YOUR_REPOSITORY/tree/main/data"><strong>Team Evaluation Set ↗</strong></a></td>
-                    <td>Evaluation</td>
-                    <td>fearful × 100</td>
-                    <td>6-class 평가 범위 확장</td>
-                    <td><a href="https://github.com/YOUR_GITHUB_ID/YOUR_REPOSITORY/tree/main/preprocessing/evaluation">Preprocessing</a></td>
-                  </tr>
                 </tbody>
               </table>
             </div>
-            <p class="table-note">Evaluation에는 학습에 사용하지 않은 문장과 화자를 사용합니다. 최종 평가 세트는 여섯 감정 클래스별 100개, 총 600개 음성으로 구성합니다.</p>
+            <p class="table-note">Evaluation에는 학습에 사용하지 않은 문장과 화자를 사용합니다. 최종 평가 세트는 다섯 감정 클래스별 100개, 총 500개 음성으로 구성합니다.</p>
           </div>
         </section>
 
@@ -595,8 +588,8 @@
           <p class="section-label">05 / Evaluation</p>
           <div class="section-body">
             <h2>Evaluation Setup</h2>
-            <p class="lead">모든 시스템은 동일한 600개 텍스트와 감정 조건으로 음성을 생성하며, 동일한 평가 모델과 설정을 적용합니다.</p>
-            <p><code>happy</code>, <code>angry</code>, <code>sadness</code>, <code>surprise</code>, <code>fearful</code>, <code>neutral</code> 데이터를 각 100개씩 사용합니다. 생성 음성은 24 kHz WAV로 저장하고 별도 후처리 없이 감정 일치도와 음질을 평가합니다.</p>
+            <p class="lead">모든 시스템은 동일한 500개 텍스트와 감정 조건으로 음성을 생성하며, 동일한 평가 모델과 설정을 적용합니다.</p>
+            <p><code>happy</code>, <code>angry</code>, <code>sadness</code>, <code>surprise</code>, <code>neutral</code> 데이터를 각 100개씩 사용합니다. 생성 음성은 24 kHz WAV로 저장하고 별도 후처리 없이 감정 일치도와 음질을 평가합니다.</p>
 
             <div class="table-wrap" role="region" aria-label="Evaluation 구성" tabindex="0">
               <table>
