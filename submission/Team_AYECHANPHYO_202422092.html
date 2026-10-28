@@ -1,0 +1,1596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Speech Recognition Challenge 2026 benchmark website">
+  <title>Speech Recognition Challenge 2026</title>
+  <style>
+    :root { --navy:#142944; --ink:#14243c; --blue:#2875ed; --muted:#58677c; --line:#dce4ee; --panel:#f5f8fc; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; background:white; color:var(--ink); font-family:Arial,Helvetica,sans-serif; line-height:1.55; }
+    a { color:inherit; }
+    .topbar { background:var(--navy); color:white; }
+    .nav { max-width:1120px; margin:auto; min-height:68px; padding:15px 24px; display:flex; justify-content:space-between; align-items:center; gap:20px; }
+    .brand { font-weight:700; text-decoration:none; font-size:17px; }
+    .nav-links { display:flex; flex-wrap:wrap; gap:22px; }
+    .nav-links a { text-decoration:none; color:#e3ebf7; font-size:13px; }
+    .nav-links a:hover { color:white; text-decoration:underline; }
+    main { max-width:1120px; margin:auto; padding:0 24px; }
+    .hero { padding:66px 12px 72px; text-align:center; }
+    .hero-icon { display:block; margin:0 auto 12px; color:var(--blue); }
+    .hero h1 { margin:0 0 8px; font-size:clamp(30px,4.2vw,43px); line-height:1.18; letter-spacing:-1px; }
+    .hero p { margin:0 auto 24px; max-width:680px; color:var(--muted); }
+    .btn { display:inline-block; border:1px solid #a8bbd4; padding:10px 16px; border-radius:6px; background:white; color:var(--ink); text-decoration:none; font-size:13px; font-weight:700; text-align:center; cursor:pointer; }
+    .btn:hover { border-color:var(--blue); color:var(--blue); }
+    .btn-primary { background:var(--blue); border-color:var(--blue); color:white; }
+    .btn-primary:hover { background:#195dc4; color:white; }
+    section { border-top:1px solid var(--line); padding:26px 0 32px; scroll-margin-top:12px; }
+    section h2 { font-size:25px; margin:0 0 4px; letter-spacing:-.4px; }
+    .section-desc { color:var(--muted); margin:0 0 20px; font-size:14px; }
+    .grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:7px; padding:21px; display:flex; gap:14px; align-items:flex-start; min-width:0; }
+    .card svg { flex:none; color:var(--blue); margin-top:2px; }
+    .card h3 { margin:0 0 4px; font-size:15px; }
+    .card p { margin:0; color:var(--muted); font-size:13px; }
+    .dataset-sources { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+    .dataset-source { display:block; }
+    .dataset-source > div { width:100%; }
+    .dataset-source p { margin:0 0 18px; line-height:1.7; }
+    .dataset-actions { margin-top:14px; }
+    .dataset-actions .btn { flex:0 1 auto; }
+    @media(max-width:740px) { .dataset-sources { grid-template-columns:1fr; } }
+    .dataset-link { margin-top:18px; font-size:13px; }
+    .dataset-link a { color:#1763ce; overflow-wrap:anywhere; }
+    .table-wrap { overflow-x:auto; border:1px solid var(--line); border-radius:7px; }
+    table { border-collapse:collapse; width:100%; min-width:540px; font-size:14px; }
+    th,td { padding:12px 15px; border-bottom:1px solid var(--line); text-align:left; }
+    th { background:#eff4fa; }
+    tr:last-child td { border-bottom:none; }
+    th:first-child,td:first-child { width:90px; text-align:center; }
+    .note { margin:12px 0 0; font-size:12px; color:var(--muted); }
+    .evaluation-table th:last-child, .evaluation-table td:last-child { white-space:nowrap; width:120px; }
+    .evaluation-table th:first-child { width:205px; }
+    .eval-box { background:var(--panel); border:1px solid var(--line); border-radius:7px; padding:22px; display:grid; grid-template-columns:1fr 1fr; gap:25px; align-items:center; }
+    .formula { font-size:15px; font-weight:700; }
+    .eval-box ul { margin:0; padding-left:22px; color:var(--muted); font-size:13px; border-left:1px solid var(--line); }
+
+    /* Evaluation cards use a vertical layout. The global .card class is horizontal. */
+    #evaluation .evaluation-card { display:block; }
+    #evaluation .evaluation-card p { margin:8px 0; line-height:1.7; }
+    #evaluation .grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    @media(max-width:740px) { #evaluation .grid { grid-template-columns:1fr; } }
+    .resource-card { display:block; }
+    .resource-card h3 { margin-bottom:7px; }
+    .resource-card p { margin-bottom:15px; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .actions .btn { flex:1; min-width:115px; }
+    .disabled-link { opacity:.65; cursor:not-allowed; }
+    footer { background:var(--navy); color:white; margin-top:20px; }
+    .footer-inner { max-width:1120px; margin:auto; padding:25px 24px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    footer strong { font-size:14px; }
+    footer p { color:#d0dceb; margin:3px 0 0; font-size:12px; }
+    footer a { font-size:12px; color:#d0dceb; text-decoration:none; }
+    @media(max-width:740px) { .nav,.footer-inner { flex-direction:column; align-items:flex-start; } .nav-links { gap:12px; } .grid { grid-template-columns:1fr; } .eval-box { grid-template-columns:1fr; } .eval-box ul { border-left:0; border-top:1px solid var(--line); padding-top:15px; } .hero { padding:48px 0 55px; } }
+
+    .research-block { margin:22px 0 30px; }
+    .research-block h3 { font-size:19px; margin:0 0 13px; padding-bottom:9px; border-bottom:1px solid var(--line); }
+    .research-block p { font-size:14px; line-height:1.85; margin:0 0 13px; overflow-wrap:anywhere; }
+    .problem-item { padding:17px 0; border-bottom:1px solid var(--line); }
+    .problem-item h4,.goal-card h4 { font-size:15px; margin:0 0 9px; color:var(--ink); }
+    .problem-item:last-child { border-bottom:0; }
+    .pipeline { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:12px; background:var(--panel); border:1px solid var(--line); border-radius:7px; padding:18px 12px; font-size:13px; font-weight:700; margin-top:14px; text-align:center; }
+    .pipe-arrow { color:var(--blue); font-size:19px; }
+    .example-box { background:var(--panel); border:1px solid var(--line); border-radius:7px; padding:18px; margin-top:14px; }
+    .example-box p { margin-top:12px; margin-bottom:0; }
+    .goal-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px; margin-top:16px; }
+    .goal-card { border:1px solid var(--line); background:var(--panel); border-radius:7px; padding:20px; }
+    .goal-card p { font-size:13px; margin:0; }
+    @media(max-width:740px) { .goal-grid { grid-template-columns:1fr; } }
+
+    /* Compact 2 × 2 problem definition cards */
+    .problem-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin-top:16px; }
+    .problem-card { border:1px solid var(--line); background:var(--panel); border-radius:9px; padding:20px 22px; min-width:0; }
+    .problem-number { display:inline-block; color:var(--blue); font-size:12px; font-weight:700; letter-spacing:.08em; margin-bottom:8px; }
+    .problem-card h4 { margin:0 0 8px; color:var(--ink); font-size:16px; line-height:1.4; }
+    .problem-card p { margin:0; color:var(--muted); font-size:13px; line-height:1.7; }
+    @media(max-width:600px) { .problem-grid { grid-template-columns:1fr; } }
+
+
+    /* Problem definition visual examples */
+    .problem-example { margin-top:16px; padding-top:15px; border-top:1px solid var(--line); }
+    .problem-example-title { display:block; margin-bottom:12px; font-size:12px; font-weight:800; color:var(--ink); }
+    .mini-flow { display:flex; align-items:stretch; justify-content:center; gap:8px; flex-wrap:wrap; }
+    .mini-step { flex:1 1 110px; min-width:0; padding:12px 10px; border:1px solid #d7e2ef; border-radius:7px; background:#fff; text-align:center; }
+    .mini-step strong { display:block; font-size:12px; line-height:1.45; color:var(--ink); }
+    .mini-step small { display:block; margin-top:5px; color:var(--muted); font-size:10px; line-height:1.45; }
+    .mini-step.error { border-style:dashed; }
+    .mini-arrow { align-self:center; flex:0 0 auto; color:var(--blue); font-size:18px; font-weight:800; }
+    .error-note { margin-top:10px !important; padding:9px 11px; border-radius:6px; background:#fff; border:1px dashed #cbd8e8; font-size:11px !important; line-height:1.6 !important; color:var(--muted) !important; }
+    @media(max-width:600px) { .mini-flow { flex-direction:column; } .mini-arrow { transform:rotate(90deg); align-self:center; } }
+
+    /* Single-file page navigation: only one view is shown at a time. */
+    main > section { display:none; }
+    main > section.is-active { display:block; }
+    .nav-links a[aria-current="page"] { color:#fff; font-weight:700; text-decoration:underline; text-underline-offset:6px; }
+    main { min-height:calc(100vh - 220px); }
+    main > section.is-active { border-top:0; padding-top:38px; }
+    @media(max-width:740px) { main > section.is-active { padding-top:24px; } }
+
+    /* Dataset page */
+    .dataset-block { margin-top:22px; padding:26px; border:1px solid var(--line); border-radius:10px; background:#fff; }
+    .dataset-block + .dataset-block { margin-top:22px; }
+    .dataset-heading-row { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; }
+    .dataset-heading-row h3 { margin:5px 0 8px; font-size:21px; }
+    .dataset-heading-row p { margin:0; max-width:760px; font-size:13px; line-height:1.75; color:var(--muted); }
+    .dataset-label { color:var(--blue); font-size:11px; font-weight:800; letter-spacing:.12em; }
+    .dataset-stats { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; margin:24px 0; }
+    .stat-card { padding:18px 12px; text-align:center; background:var(--panel); border:1px solid var(--line); border-radius:8px; }
+    .stat-card strong { display:block; font-size:23px; color:var(--ink); }
+    .stat-card span { display:block; margin-top:4px; color:var(--muted); font-size:12px; }
+    .dataset-subtitle { margin:25px 0 12px; font-size:14px; }
+    .dataset-flow { display:flex; align-items:center; justify-content:center; gap:14px; padding:18px; border:1px solid var(--line); background:var(--panel); border-radius:8px; }
+    .dataset-flow > div { flex:1; text-align:center; }
+    .dataset-flow strong,.dataset-flow span { display:block; }
+    .dataset-flow span:not(.flow-arrow) { margin-top:4px; font-size:11px; color:var(--muted); }
+    .flow-arrow { color:var(--blue); font-size:20px; font-weight:700; }
+    .source-grid,.language-file-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .source-card,.language-file-card { border:1px solid var(--line); background:var(--panel); border-radius:8px; padding:18px; }
+    .source-card h4,.language-file-card h4 { margin:7px 0; font-size:15px; }
+    .source-card p,.language-file-card p { margin:0; color:var(--muted); font-size:12px; line-height:1.7; }
+    .source-count { color:var(--blue); font-size:11px; font-weight:700; }
+    .compact-table td:first-child { width:180px; text-align:left; }
+    .compact-table code,.language-file-card code,.split-note code { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:11px; background:#eef4fb; border-radius:4px; padding:3px 6px; }
+    .processed-block { background:#fbfdff; }
+    .processed-explanation { margin-top:20px; padding:18px 20px; border-left:3px solid var(--blue); background:var(--panel); border-radius:0 7px 7px 0; }
+    .processed-explanation p { margin:0 0 8px; font-size:13px; line-height:1.75; color:var(--muted); }
+    .processed-explanation p:last-child { margin-bottom:0; }
+    .language-file-card { text-align:center; }
+    .language-icon { font-size:24px; }
+    .language-file-card code { display:inline-block; margin:2px 0 12px; }
+    .split-note { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:16px; }
+    .split-note > div { display:grid; grid-template-columns:auto auto 1fr; align-items:center; gap:10px; padding:14px 16px; border:1px solid var(--line); border-radius:7px; background:#fff; font-size:12px; }
+    .split-note span { color:var(--muted); text-align:right; }
+    @media(max-width:740px) { .dataset-heading-row { flex-direction:column; } .dataset-stats { grid-template-columns:1fr 1fr; } .source-grid,.language-file-grid { grid-template-columns:1fr; } .dataset-flow { flex-direction:column; } .flow-arrow { transform:rotate(90deg); } .split-note { grid-template-columns:1fr; } .split-note > div { grid-template-columns:1fr; } .split-note span { text-align:left; } }
+  </style>
+
+<style>
+.problem-example{margin-top:18px;padding-top:16px;border-top:1px solid #d8e2ef}
+.example-title{font-weight:800;color:#14243d;margin-bottom:12px}
+.example-flow{display:flex;align-items:stretch;gap:10px}
+.example-node{flex:1;min-width:0;background:#fff;border:1px solid #cfdceb;border-radius:9px;padding:13px 10px;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:7px}
+.example-node strong{font-size:13px;color:#14243d}
+.example-node span{font-size:18px;font-weight:700;color:#14243d;line-height:1.45;overflow-wrap:anywhere}
+.example-node small{font-size:12px;line-height:1.5;color:#65748b}
+.error-node{border-style:dashed}
+.example-arrow{align-self:center;color:#2878ee;font-size:22px;font-weight:700}
+.translation-example{background:#fff;border:1px solid #cfdceb;border-radius:9px;padding:18px}
+.translation-row{display:grid;grid-template-columns:230px 1fr;gap:16px;padding:10px 0;border-bottom:1px solid #e7edf5;align-items:start}
+.translation-row:last-child{border-bottom:0}
+.translation-row strong{color:#14243d;font-weight:700}
+.translation-row span{color:#263850;line-height:1.65}
+.translation-row.predicted span{font-weight:400}
+.translation-down{margin-left:110px;font-size:22px;padding:4px 0;color:#14243d}
+@media(max-width:760px){
+  .example-flow{flex-direction:column}
+  .example-arrow{transform:rotate(90deg)}
+  .translation-row{grid-template-columns:1fr;gap:5px}
+  .translation-down{margin-left:0;text-align:center}
+}
+</style>
+
+
+<style>
+/* Problem cards: 01–03 in one row, 04 full width */
+.problem-grid{
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:16px !important;
+}
+.problem-grid .problem-card:nth-child(4){
+  grid-column:1 / -1 !important;
+}
+.flow-connector{
+  min-width:72px;
+  align-self:center;
+  text-align:center;
+  color:#14243d;
+}
+.flow-connector span{
+  display:block;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:5px;
+  white-space:nowrap;
+}
+.arrow-line{
+  color:#14243d;
+  font-size:24px;
+  line-height:1;
+}
+@media(max-width:1050px){
+  .problem-grid{grid-template-columns:1fr !important}
+  .problem-grid .problem-card:nth-child(4){grid-column:auto !important}
+}
+</style>
+
+
+<style>
+/* FINAL problem layout: 01+02 / 03 / 04 */
+.problem-grid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:16px !important;
+}
+.problem-grid .problem-card:nth-child(3),
+.problem-grid .problem-card:nth-child(4){
+  grid-column:1 / -1 !important;
+}
+
+/* Keep the example flows horizontal and readable */
+.problem-card .example-flow{
+  display:flex !important;
+  align-items:center !important;
+  gap:12px !important;
+}
+.problem-card .example-node{
+  flex:1 1 0 !important;
+  min-width:0 !important;
+}
+.problem-card .flow-connector{
+  flex:0 0 92px !important;
+  min-width:92px !important;
+  text-align:center !important;
+}
+.problem-card .flow-connector span{
+  display:block !important;
+  font-weight:800 !important;
+  font-size:12px !important;
+  margin-bottom:6px !important;
+  white-space:nowrap !important;
+}
+.problem-card .arrow-line{
+  font-size:25px !important;
+  line-height:1 !important;
+}
+
+/* 03 needs room for long multilingual sentences */
+.problem-grid .problem-card:nth-child(3) .translation-row{
+  grid-template-columns:250px minmax(0,1fr) !important;
+}
+
+@media(max-width:900px){
+  .problem-grid{
+    grid-template-columns:1fr !important;
+  }
+  .problem-grid .problem-card:nth-child(3),
+  .problem-grid .problem-card:nth-child(4){
+    grid-column:auto !important;
+  }
+  .problem-card .example-flow{
+    flex-direction:column !important;
+  }
+  .problem-card .flow-connector{
+    min-width:0 !important;
+    flex:auto !important;
+  }
+  .problem-card .arrow-line{
+    transform:rotate(90deg);
+  }
+  .problem-grid .problem-card:nth-child(3) .translation-row{
+    grid-template-columns:1fr !important;
+  }
+}
+</style>
+
+
+<style>
+/* FINAL FIX — 01 and 02 example flows stay horizontal */
+.problem-grid .problem-card:nth-child(1) .example-flow,
+.problem-grid .problem-card:nth-child(2) .example-flow{
+  display:grid !important;
+  grid-template-columns:minmax(115px,1fr) 78px minmax(115px,1fr) 105px minmax(105px,1fr) !important;
+  align-items:center !important;
+  gap:8px !important;
+}
+
+.problem-grid .problem-card:nth-child(1) .example-node,
+.problem-grid .problem-card:nth-child(2) .example-node{
+  width:auto !important;
+  min-width:0 !important;
+  height:auto !important;
+}
+
+.problem-grid .problem-card:nth-child(1) .flow-connector,
+.problem-grid .problem-card:nth-child(2) .flow-connector{
+  width:auto !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+.problem-grid .problem-card:nth-child(1) .flow-connector span,
+.problem-grid .problem-card:nth-child(2) .flow-connector span{
+  white-space:nowrap !important;
+  writing-mode:horizontal-tb !important;
+  word-break:normal !important;
+}
+
+.problem-grid .problem-card:nth-child(1) .arrow-line,
+.problem-grid .problem-card:nth-child(2) .arrow-line{
+  transform:none !important;
+  width:100% !important;
+  text-align:center !important;
+}
+
+/* 01 + 02 first row; 03 second row; 04 third row */
+.problem-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+}
+.problem-grid .problem-card:nth-child(3),
+.problem-grid .problem-card:nth-child(4){
+  grid-column:1 / -1 !important;
+}
+
+/* Only switch to vertical on small screens */
+@media(max-width:700px){
+  .problem-grid{
+    grid-template-columns:1fr !important;
+  }
+  .problem-grid .problem-card:nth-child(3),
+  .problem-grid .problem-card:nth-child(4){
+    grid-column:auto !important;
+  }
+  .problem-grid .problem-card:nth-child(1) .example-flow,
+  .problem-grid .problem-card:nth-child(2) .example-flow{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  .problem-grid .problem-card:nth-child(1) .arrow-line,
+  .problem-grid .problem-card:nth-child(2) .arrow-line{
+    transform:rotate(90deg) !important;
+  }
+}
+</style>
+
+
+<style>
+/* FINAL problem layout: every problem gets its own row */
+.problem-grid{
+  display:grid !important;
+  grid-template-columns:1fr !important;
+  gap:16px !important;
+}
+.problem-grid .problem-card{
+  grid-column:1 !important;
+}
+
+/* Keep 01 and 02 example diagrams horizontal inside their full-width rows */
+.problem-grid .problem-card:nth-child(1) .example-flow,
+.problem-grid .problem-card:nth-child(2) .example-flow{
+  display:grid !important;
+  grid-template-columns:minmax(150px,1fr) 110px minmax(150px,1fr) 145px minmax(150px,1fr) !important;
+  align-items:center !important;
+  gap:16px !important;
+  width:100% !important;
+}
+.problem-grid .problem-card:nth-child(1) .flow-connector,
+.problem-grid .problem-card:nth-child(2) .flow-connector{
+  min-width:0 !important;
+  width:auto !important;
+}
+.problem-grid .problem-card:nth-child(1) .flow-connector span,
+.problem-grid .problem-card:nth-child(2) .flow-connector span{
+  white-space:nowrap !important;
+  writing-mode:horizontal-tb !important;
+}
+.problem-grid .problem-card:nth-child(1) .arrow-line,
+.problem-grid .problem-card:nth-child(2) .arrow-line{
+  transform:none !important;
+}
+
+@media(max-width:700px){
+  .problem-grid .problem-card:nth-child(1) .example-flow,
+  .problem-grid .problem-card:nth-child(2) .example-flow{
+    display:flex !important;
+    flex-direction:column !important;
+  }
+  .problem-grid .problem-card:nth-child(1) .arrow-line,
+  .problem-grid .problem-card:nth-child(2) .arrow-line{
+    transform:rotate(90deg) !important;
+  }
+}
+</style>
+
+
+<style>
+.leaderboard-submit-guide{
+  margin-top:28px;padding:24px;border:1px solid #d8e2ef;border-radius:10px;background:#f7faff;
+}
+.leaderboard-submit-guide h3{margin:0 0 8px;color:#14243d;font-size:20px}
+.leaderboard-submit-guide>p{margin:0 0 20px;color:#5f6f86;line-height:1.7}
+.submit-steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.submit-step{background:#fff;border:1px solid #d8e2ef;border-radius:9px;padding:16px;min-width:0}
+.step-no{display:block;color:#2878ee;font-weight:800;font-size:12px;margin-bottom:8px}
+.submit-step strong{display:block;color:#14243d;margin-bottom:8px}
+.submit-step p{margin:0;color:#5f6f86;font-size:13px;line-height:1.65}
+.submit-step code{font-size:12px;color:#14243d;background:#eef4fb;padding:2px 5px;border-radius:4px}
+@media(max-width:1000px){.submit-steps{grid-template-columns:1fr 1fr}}
+@media(max-width:650px){.submit-steps{grid-template-columns:1fr}}
+</style>
+
+
+<style>
+#resources .resource-grid,
+#resources .resources-grid{
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+}
+@media(max-width:850px){
+  #resources .resource-grid,
+  #resources .resources-grid{
+    grid-template-columns:1fr !important;
+  }
+}
+</style>
+
+
+<style>
+#resources .resources-three-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:16px;
+}
+#resources .resources-three-grid .resource-card{
+  background:#f5f8fc;
+  border:1px solid #d8e2ef;
+  border-radius:9px;
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  min-height:220px;
+}
+#resources .resources-three-grid .resource-card h3{
+  margin:0 0 12px;
+  color:#14243d;
+}
+#resources .resources-three-grid .resource-card p{
+  margin:0 0 18px;
+  color:#5f6f86;
+  line-height:1.7;
+  flex:1;
+}
+#resources .resource-buttons{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+}
+@media(max-width:850px){
+  #resources .resources-three-grid{grid-template-columns:1fr}
+}
+</style>
+
+
+<style>
+/* Hero redesign */
+.hero {
+  position:relative;
+  overflow:hidden;
+  width:100vw;
+  margin-left:calc(50% - 50vw);
+  margin-right:calc(50% - 50vw);
+  padding:78px 24px 84px;
+  background:
+    radial-gradient(circle at 18% 30%, rgba(40,117,237,.14), transparent 27%),
+    radial-gradient(circle at 82% 70%, rgba(82,169,255,.13), transparent 28%),
+    linear-gradient(135deg,#f8fbff 0%,#eef6ff 52%,#f8fbff 100%);
+}
+.hero::before,.hero::after {
+  content:""; position:absolute; left:-5%; width:110%; height:70px; opacity:.34;
+  background-repeat:repeat-x; background-size:280px 70px; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='70' viewBox='0 0 280 70'%3E%3Cpath d='M0 35 C20 35 20 12 40 12 S60 58 80 58 100 22 120 22 140 48 160 48 180 8 200 8 220 61 240 61 260 35 280 35' fill='none' stroke='%232875ed' stroke-width='2'/%3E%3C/svg%3E");
+}
+.hero::before { top:18px; } .hero::after { bottom:14px; transform:scaleX(-1); opacity:.2; }
+.hero-content { position:relative; z-index:1; max-width:850px; margin:auto; }
+.brand { display:flex; align-items:center; gap:9px; }
+.brand-logo { width:27px; height:27px; color:#68a8ff; flex:none; }
+.hero h1 { max-width:820px; margin:0 auto 13px; font-size:clamp(34px,4.7vw,50px); letter-spacing:-1.5px; }
+.hero p { max-width:720px; font-size:16px; }
+@media(max-width:740px){ .hero{width:100vw;margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding:58px 24px 64px}.hero h1{font-size:34px} }
+</style>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23142944'/%3E%3Cpath d='M32 13a8 8 0 0 0-8 8v13a8 8 0 0 0 16 0V21a8 8 0 0 0-8-8Zm-14 19v2a14 14 0 0 0 28 0v-2M32 48v7M24 55h16' fill='none' stroke='%235aa0ff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+
+
+<style>
+/* Small blue front labels, matching ORIGINAL DATASET */
+.eyebrow-label,
+#leaderboard th.metric-label{
+  display:block;
+  color:#2878ee !important;
+  font-size:12px !important;
+  font-weight:800 !important;
+  letter-spacing:.12em !important;
+  text-transform:uppercase;
+}
+.goal-card .eyebrow-label{margin-bottom:9px;}
+.goal-card h4{margin-top:0;}
+/* Keep table cells behaving as table cells while using the same typography */
+#leaderboard th.metric-label{display:table-cell;}
+/* Resource buttons now match the filled View on Hugging Face button */
+#resources .btn.btn-primary{
+  background:#2878ee !important;
+  color:#fff !important;
+  border:1px solid #2878ee !important;
+  box-shadow:none !important;
+}
+#resources .btn.btn-primary:hover{
+  background:#1f67d5 !important;
+  border-color:#1f67d5 !important;
+}
+</style>
+
+<style>
+/* Evaluation metric labels — same visual language as ORIGINAL DATASET */
+#evaluation .evaluation-label{
+  margin:0 0 14px !important;
+  color:var(--blue) !important;
+  font-size:11px !important;
+  font-weight:800 !important;
+  letter-spacing:.12em !important;
+  text-transform:none !important;
+}
+/* Keep Leaderboard headers in their original table style */
+#leaderboard th{
+  color:var(--ink);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:normal;
+  text-transform:none;
+}
+</style>
+
+<style>
+/* Unified button color: dark navy */
+.btn,
+.btn.primary,
+a.btn,
+button.btn,
+button.primary {
+  background: #173252 !important;
+  border-color: #173252 !important;
+  color: #ffffff !important;
+}
+
+.btn:hover,
+.btn.primary:hover,
+a.btn:hover,
+button.btn:hover,
+button.primary:hover {
+  background: #102844 !important;
+  border-color: #102844 !important;
+  color: #ffffff !important;
+}
+
+/* Keep all resource/dataset/evaluation action buttons consistent */
+#dataset a.btn,
+#evaluation a.btn,
+#resources a.btn {
+  background: #173252 !important;
+  border-color: #173252 !important;
+  color: #ffffff !important;
+}
+</style>
+
+
+<style>
+/* FINAL BUTTON OVERRIDES — navy + visible hover on every page */
+
+/* Normal state */
+#dataset a.btn,
+#dataset .btn,
+#evaluation a.btn,
+#evaluation .btn,
+#resources a.btn,
+#resources .btn,
+#resources .btn.btn-primary,
+#resources .btn.btn-secondary {
+  background: #173252 !important;
+  border-color: #173252 !important;
+  color: #ffffff !important;
+  transition: background-color .18s ease, border-color .18s ease,
+              transform .18s ease, box-shadow .18s ease !important;
+}
+
+/* Hover state */
+#dataset a.btn:hover,
+#dataset .btn:hover,
+#evaluation a.btn:hover,
+#evaluation .btn:hover,
+#resources a.btn:hover,
+#resources .btn:hover,
+#resources .btn.btn-primary:hover,
+#resources .btn.btn-secondary:hover {
+  background: #0d2440 !important;
+  border-color: #0d2440 !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 7px 16px rgba(13, 36, 64, .18) !important;
+}
+
+/* Keyboard focus */
+#dataset a.btn:focus-visible,
+#evaluation a.btn:focus-visible,
+#resources a.btn:focus-visible {
+  outline: 3px solid rgba(23, 50, 82, .25) !important;
+  outline-offset: 3px !important;
+}
+</style>
+
+
+<style>
+/* FINAL HOVER: color change only — no movement */
+#dataset a.btn:hover,
+#dataset .btn:hover,
+#evaluation a.btn:hover,
+#evaluation .btn:hover,
+#resources a.btn:hover,
+#resources .btn:hover,
+#resources .btn.btn-primary:hover,
+#resources .btn.btn-secondary:hover {
+  background: #29496d !important;
+  border-color: #29496d !important;
+  color: #ffffff !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+#dataset a.btn,
+#dataset .btn,
+#evaluation a.btn,
+#evaluation .btn,
+#resources a.btn,
+#resources .btn {
+  transition: background-color .18s ease, border-color .18s ease !important;
+}
+</style>
+
+
+<style>
+/* ===== FINAL LEADERBOARD WIDTH FIX ===== */
+#leaderboard .table-wrap {
+  width: 100% !important;
+  overflow-x: auto !important;
+}
+
+#leaderboard table {
+  width: 100% !important;
+  min-width: 900px !important;
+  table-layout: fixed !important;
+}
+
+#leaderboard table th:nth-child(1),
+#leaderboard table td:nth-child(1) {
+  width: 40% !important;
+  min-width: 300px !important;
+  white-space: normal !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+}
+
+#leaderboard table th:nth-child(2),
+#leaderboard table td:nth-child(2) {
+  width: 15% !important;
+  min-width: 110px !important;
+}
+
+#leaderboard table th:nth-child(3),
+#leaderboard table td:nth-child(3) {
+  width: 15% !important;
+  min-width: 120px !important;
+}
+
+#leaderboard table th:nth-child(4),
+#leaderboard table td:nth-child(4) {
+  width: 15% !important;
+  min-width: 110px !important;
+}
+
+#leaderboard table th:nth-child(5),
+#leaderboard table td:nth-child(5) {
+  width: 15% !important;
+  min-width: 110px !important;
+}
+
+/* Keep model names readable */
+#leaderboard table td:first-child {
+  line-height: 1.55 !important;
+}
+
+/* ===== BUTTONS: NAVY + LIGHTER HOVER, NO MOVEMENT ===== */
+#dataset a.btn,
+#dataset .btn,
+#evaluation a.btn,
+#evaluation .btn,
+#resources a.btn,
+#resources .btn,
+#resources .btn.btn-primary,
+#resources .btn.btn-secondary {
+  background: #173252 !important;
+  border-color: #173252 !important;
+  color: #ffffff !important;
+  transform: none !important;
+  box-shadow: none !important;
+  transition: background-color .18s ease, border-color .18s ease !important;
+}
+
+#dataset a.btn:hover,
+#dataset .btn:hover,
+#evaluation a.btn:hover,
+#evaluation .btn:hover,
+#resources a.btn:hover,
+#resources .btn:hover,
+#resources .btn.btn-primary:hover,
+#resources .btn.btn-secondary:hover {
+  background: #29496d !important;
+  border-color: #29496d !important;
+  color: #ffffff !important;
+  transform: none !important;
+  box-shadow: none !important;
+}
+</style>
+
+<style>
+/* ===== NAVBAR: BRAND LEFT / TABS RIGHT ===== */
+.topbar .nav {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 15px 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+.topbar .brand {
+  display: flex !important;
+  align-items: center !important;
+  gap: 9px !important;
+  margin-right: auto !important;
+}
+.topbar .nav-links {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 28px !important;
+  margin-left: auto !important;
+}
+
+@media (max-width: 740px) {
+  .topbar .nav {
+    padding: 14px 18px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  .topbar .nav-links {
+    margin-left: 0 !important;
+    justify-content: flex-start !important;
+    gap: 14px !important;
+  }
+}
+
+/* ===== SEPARATED LEADERBOARD TABLES ===== */
+.leaderboard-language-block {
+  margin-top: 18px;
+}
+.leaderboard-language-block + .leaderboard-language-block {
+  margin-top: 30px;
+}
+.leaderboard-language-title {
+  margin: 0 0 14px;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.4px;
+}
+#leaderboard .language-table {
+  width: 100% !important;
+  min-width: 760px !important;
+  table-layout: fixed !important;
+}
+#leaderboard .language-table th:nth-child(1),
+#leaderboard .language-table td:nth-child(1) {
+  width: 46% !important;
+}
+#leaderboard .language-table th:nth-child(2),
+#leaderboard .language-table td:nth-child(2),
+#leaderboard .language-table th:nth-child(3),
+#leaderboard .language-table td:nth-child(3),
+#leaderboard .language-table th:nth-child(4),
+#leaderboard .language-table td:nth-child(4) {
+  width: 18% !important;
+}
+#leaderboard .language-table td:first-child {
+  white-space: normal !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+}
+
+/* Highlight the first/best row in each language table */
+#leaderboard .language-table tbody tr.best-row td {
+  background: #eaf3ff !important;
+  color: var(--ink) !important;
+  font-weight: 600;
+}
+#leaderboard .language-table tbody tr.best-row td:first-child {
+  color: #155fc1 !important;
+  font-weight: 800;
+}
+.best-badge {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: #2875ed;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  vertical-align: middle;
+  letter-spacing: .2px;
+}
+</style>
+<style>
+/* Slightly smaller hero title */
+.hero h1 {
+  font-size: 44px !important;
+}
+@media (max-width: 740px) {
+  .hero h1 {
+    font-size: 34px !important;
+  }
+}
+</style>
+<style>
+/* Keep evaluation metric capitalization exactly as written (chrF++) */
+#evaluation .metric-name,
+#evaluation .metric-title,
+#evaluation th {
+  text-transform: none !important;
+}
+</style>
+<style>
+/* ===== FINAL TEXT / ALIGNMENT FIXES ===== */
+
+/* Evaluation: preserve exact capitalization, e.g. chrF++ */
+#evaluation .metric-tag {
+  text-transform: none !important;
+}
+
+/* Hero title and subtitle centered */
+.hero,
+.hero .hero-inner {
+  text-align: center !important;
+}
+.hero h1,
+.hero p,
+.hero .subtitle {
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.hero h1 {
+  font-size: 44px !important;
+  line-height: 1.12 !important;
+}
+.hero p,
+.hero .subtitle {
+  width: 100% !important;
+  max-width: 760px !important;
+}
+
+/* Keep the labels over the arrows centered */
+.example-arrow,
+.example-arrow .arrow-label {
+  text-align: center !important;
+}
+</style>
+
+<style>
+/* Exact final fixes */
+.hero-content{
+  text-align:center !important;
+}
+.hero-content h1{
+  font-size:42px !important;
+  line-height:1.12 !important;
+  text-align:center !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+}
+.hero-content p{
+  width:100% !important;
+  max-width:760px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  text-align:center !important;
+}
+.problem-card .flow-connector{
+  text-align:center !important;
+  min-width:150px !important;
+}
+.problem-card .flow-connector span{
+  display:block !important;
+  width:100% !important;
+  text-align:center !important;
+  white-space:normal !important;
+  line-height:1.25 !important;
+}
+#evaluation .evaluation-label{
+  text-transform:none !important;
+}
+</style>
+
+
+<style>
+/* Fix long model names above arrows in problem examples */
+.problem-card .example-flow {
+  display: grid !important;
+  grid-template-columns: minmax(180px, 1fr) 145px minmax(180px, 1fr) 155px minmax(180px, 1fr) !important;
+  align-items: center !important;
+  column-gap: 12px !important;
+  width: 100% !important;
+}
+
+.problem-card .flow-connector {
+  width: 100% !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.problem-card .flow-connector span {
+  display: block !important;
+  width: 100% !important;
+  max-width: 150px !important;
+  margin: 0 auto 6px !important;
+  text-align: center !important;
+  white-space: normal !important;
+  overflow: visible !important;
+  font-size: 10px !important;
+  line-height: 1.35 !important;
+  font-weight: 800 !important;
+}
+
+.problem-card .flow-connector .arrow-line {
+  width: 100% !important;
+  text-align: center !important;
+  font-size: 20px !important;
+  line-height: 1 !important;
+}
+
+/* Keep each flow box readable */
+.problem-card .flow-node {
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+/* On smaller screens, allow horizontal scrolling instead of crushing the diagram */
+@media (max-width: 900px) {
+  .problem-card .example-flow {
+    min-width: 900px !important;
+  }
+}
+</style>
+
+
+<style>
+/* Final requested cleanup */
+
+/* Remove any accidental internal labels in example nodes */
+.problem-card .flow-node > strong:first-child {
+  /* Keep normal node labels generally; specific ASR/LLM labels were removed in HTML */
+}
+
+/* Force hero content to the true horizontal center */
+.hero {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+.hero-content {
+  width: 100% !important;
+  max-width: 1120px !important;
+  margin: 0 auto !important;
+  padding-left: 24px !important;
+  padding-right: 24px !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+}
+.hero-content h1 {
+  display: block !important;
+  width: 100% !important;
+  max-width: 900px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+.hero-content p {
+  display: block !important;
+  width: 100% !important;
+  max-width: 760px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  text-align: center !important;
+}
+</style>
+
+
+<style>
+/* TRUE viewport-centered hero */
+.hero {
+  position: relative !important;
+  left: 50% !important;
+  right: auto !important;
+  width: 100vw !important;
+  margin-left: -50vw !important;
+  margin-right: 0 !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+}
+.hero-content {
+  position: relative !important;
+  left: auto !important;
+  transform: none !important;
+  width: min(100% - 48px, 1000px) !important;
+  max-width: 1000px !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  text-align: center !important;
+}
+.hero-content h1 {
+  width: 100% !important;
+  max-width: 900px !important;
+  margin: 0 auto 14px !important;
+  text-align: center !important;
+}
+.hero-content p {
+  width: 100% !important;
+  max-width: 760px !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+}
+
+/* Center contents of the example output boxes after removing ASR/LLM labels */
+.problem-card .example-node {
+  text-align: center !important;
+}
+</style>
+
+
+<style>
+.hero-content h1 {
+  font-size: 36px !important;
+}
+</style>
+
+</head>
+<body>
+  <header class="topbar">
+    <nav class="nav" aria-label="Main navigation">
+      <a class="brand" href="#home"><svg class="brand-logo" viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="3.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="25" y="10" width="14" height="27" rx="7"/><path d="M18 29v4a14 14 0 0 0 28 0v-4M32 47v7M24 54h16"/><path d="M9 23v12M14 19v20M50 19v20M55 23v12" opacity=".6"/></svg><span>Speech Recognition Challenge 2026</span></a>
+      <div class="nav-links">
+        <a href="#overview">Overview</a>
+        <a href="#dataset">Dataset</a>
+        <a href="#leaderboard">Leaderboard</a>
+        <a href="#evaluation">Evaluation</a>
+        <a href="#resources">Resources</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="hero" id="home">
+      <div class="hero-content">
+        <h1>Myanmar Speech Recognition &amp; Translation Challenge</h1>
+        <p>미얀마어 음성 인식 및 영어·한국어 음성-텍스트 번역</p>
+      </div>
+    </div>
+
+    <section id="overview">
+      <h2>01 — Challenge Overview</h2>
+      <p class="section-desc">미얀마어 음성 인식 및 영어·한국어 음성 번역 연구</p>
+      <div class="research-block">
+        <h3>1. 연구 배경 및 필요성</h3>
+        <p>음성 번역 기술은 서로 다른 언어를 사용하는 사람들이 자신의 언어로 대화할 수 있도록 지원한다. 최근 다국어 음성 번역 모델이 발전하고 있지만, 언어별 지원 범위와 번역 성능에는 차이가 있다. 특히 저자원 언어의 경우 학습에 사용할 수 있는 음성 및 번역 데이터가 제한적이어서, 음성 인식과 번역 과정에서 오류가 발생할 가능성이 있다.</p>
+        <p>미얀마어의 경우 일부 다국어 모델에서 음성 입력을 지원하지만, 실제 음성 인식과 영어·한국어 번역의 품질은 별도로 평가할 필요가 있다. 또한 모델에 따라 미얀마어 음성 입력이 공식 지원 언어에 포함되지 않는 경우도 있다.</p>
+        <p>본 연구에서는 이러한 문제에 주목하여, 미얀마어 음성을 입력받아 영어 또는 한국어 음성으로 변환하는 음성 번역 시스템을 개발한다. 특히 미얀마어 음성 인식 오류가 이후 번역 성능에 미치는 영향을 분석하고, 인식 오류를 고려한 번역 모델을 통해 성능 개선 가능성을 검증한다.</p>
+      </div>
+      <div class="research-block">
+        <h3>2. 문제 정의</h3>
+        <p>미얀마어 음성 인식에서 발생하는 오류는 영어·한국어 번역과 최종 음성 출력까지 영향을 미칠 수 있다. 본 연구는 다음 네 가지 문제를 중심으로 분석한다.</p>
+        <div class="problem-grid">
+          <article class="problem-card">
+            <span class="problem-number">01</span>
+            <h4>유사 발음 및 동음이의어</h4>
+            <p>미얀마어에는 발음이 비슷하거나 같지만 의미가 다른 단어가 있다. 이로 인해 음성 인식 모델이 단어를 잘못 인식할 수 있다.</p>
+
+            <div class="problem-example">
+              <div class="example-title">예시</div>
+              <div class="example-flow">
+                <div class="example-node">
+                  <strong>🔊 미얀마어 음성</strong>
+                  <span>ခပ်ယဲ့ယဲ့</span>
+                  <small>켓옛옛<br>(희미하게)</small>
+                </div>
+
+                <div class="flow-connector">
+                  <span>Gemma 4B-ASR<br>(Zero-shot)</span>
+                  <div class="arrow-line">→</div>
+                </div>
+
+                <div class="example-node">
+                  <span>ခက်ရဲရဲ</span>
+                  <small>케예예<br>(빨갛게)</small>
+                </div>
+
+                <div class="flow-connector">
+                  <span>Gemma 4B IT - LLM<br>(Zero shot)</span>
+                  <div class="arrow-line">→</div>
+                </div>
+
+                <div class="example-node error-node">
+                  <span>“쾌에에 병”</span>
+                </div>
+              </div>
+            </div>
+          </article>
+          <article class="problem-card">
+            <span class="problem-number">02</span>
+            <h4>ASR 오류의 번역 전파</h4>
+            <p>음성 인식 과정에서 잘못 인식된 단어는 번역 모델에도 전달된다. 따라서 최종 번역의 의미가 달라질 수 있다.</p>
+            
+      <div class="problem-example">
+        <div class="example-title">예시</div>
+        <div class="example-flow">
+          <div class="example-node">
+            <strong>🔊 미얀마어 음성</strong>
+            <span>ရုပ်ရှင်ကား</span>
+            <small>욧신까<br>(영화)</small>
+          </div>
+          <div class="flow-connector"><span>Gemma 4B-ASR<br>(Zero-shot)</span><div class="arrow-line">→</div></div>
+          <div class="example-node">
+            <span>ယုတ်ရှင်ကား</span>
+            <small>욧신까<br>(의미없음)</small>
+          </div>
+          <div class="flow-connector"><span>Gemma 4B IT - LLM<br>(Zero shot)</span><div class="arrow-line">→</div></div>
+          <div class="example-node error-node">
+            <span>“요신가지”</span>
+          </div>
+        </div>
+      </div>
+    </article>
+          <article class="problem-card">
+            <span class="problem-number">03</span>
+            <h4>번역 음성 생성까지의 오류 전파</h4>
+            <p>음성 인식이나 번역에서 발생한 오류는 음성 생성 단계까지 이어질 수 있다. 이 경우 최종 음성이 원래 문장의 의미를 정확히 전달하지 못할 수 있다.</p>
+            
+      <div class="problem-example">
+        <div class="example-title">예시</div>
+        <div class="translation-example">
+          <div class="translation-row">
+            <strong>🔊 Myanmar reference</strong>
+            <span>ငါ့အတွက်တော့ ဒါက လုံးဝအဓိပ္ပါယ်မရှိဘူး၊ လုံးဝကို မတရားဘူး။</span>
+          </div>
+          <div class="translation-row">
+            <strong>Korean translation ground truth</strong>
+            <span>그게 저에겐 말이 안 되는 것 같았습니다. 확실히 공평하지 않았어요.</span>
+          </div>
+          <div class="translation-down">↓</div>
+          <div class="translation-row predicted">
+            <strong>English predicted translation</strong>
+            <span>He has no manners at all, he is very rude.</span>
+          </div>
+          <div class="translation-row predicted">
+            <strong>Korean predicted translation</strong>
+            <span>그가 도저히 아예 말이 없어요. 도무지 그럴 수가 없어요.</span>
+          </div>
+        </div>
+      </div>
+    </article>
+          <article class="problem-card">
+            <span class="problem-number">04</span>
+            <h4>목표 언어별 번역 성능 차이</h4>
+            <p>같은 미얀마어 문장이라도 영어와 한국어의 문장 구조와 표현 방식이 다르다. 따라서 목표 언어에 따라 번역 성능이 달라질 수 있다.</p>
+          </article>
+        </div>
+        
+      </div>
+      <div class="research-block">
+        <h3>3. 연구 목표</h3>
+        <p>본 연구의 목표는 미얀마어 음성을 입력받아 영어와 한국어로 번역하는 음성 번역 시스템을 개발하고, 음성 인식 오류가 최종 번역 성능에 미치는 영향을 분석하는 것이다. 이를 위해 다음과 같은 세 가지 목표를 설정한다.</p>
+        <div class="goal-grid">
+          <article class="goal-card"><span class="eyebrow-label">목표 1</span><h4>미얀마어 음성 인식 성능 개선</h4><p>발음이 유사한 단어나 동음이의어로 인해 발생하는 음성 인식 오류를 분석하고, 이를 줄여 정확한 미얀마어 텍스트를 생성한다.</p></article>
+          <article class="goal-card"><span class="eyebrow-label">목표 2</span><h4>ASR 오류의 번역 영향 분석</h4><p>ASR 단계에서 발생한 철자 오류나 단어 선택 오류가 영어 및 한국어 번역 결과에 어떤 영향을 미치는지 분석한다.</p></article>
+          <article class="goal-card"><span class="eyebrow-label">목표 3</span><h4>언어별 번역 성능 비교</h4><p>동일한 미얀마어 음성을 입력했을 때 영어와 한국어 번역에서 발생하는 오류를 비교하고, 언어별 번역 성능의 차이와 개선 가능성을 분석한다.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section id="dataset">
+      <h2>02 — Dataset</h2>
+      <p class="section-desc">Myanmar Speech Dataset for ASR · Original &amp; Processed Data</p>
+
+      <div class="dataset-block">
+        <div class="dataset-heading-row">
+          <div>
+            <span class="dataset-label">ORIGINAL DATASET</span>
+            <h3>Myanmar Speech Dataset for ASR</h3>
+            <p lang="ko">미얀마어 자동 음성 인식(ASR)을 위한 음성-텍스트 데이터셋으로, 세 개의 미얀마어 음성 데이터 소스를 하나로 통합하여 구성한다.</p>
+          </div>
+          <a class="btn btn-primary" href="https://huggingface.co/datasets/chuuhtetnaing/myanmar-speech-dataset-for-asr" target="_blank" rel="noopener noreferrer">View on Hugging Face</a>
+        </div>
+
+        <div class="dataset-stats">
+          <div class="stat-card"><strong>9,674</strong><span>Total Samples</span></div>
+          <div class="stat-card"><strong>23.67 hrs</strong><span>Total Audio</span></div>
+          <div class="stat-card"><strong>8,897</strong><span>Train</span></div>
+          <div class="stat-card"><strong>777</strong><span>Test</span></div>
+        </div>
+
+        <h4 class="dataset-subtitle">Data Sources</h4>
+        <div class="source-grid">
+          <article class="source-card"><span class="source-count">4,322 samples</span><h4>FLEURS</h4><p>다양한 언어의 음성 인식 연구를 위한 다국어 음성 데이터셋이다. 본 프로젝트에서는 미얀마어 음성과 전사문을 사용한다.</p></article>
+          <article class="source-card"><span class="source-count">2,530 samples</span><h4>OpenSLR</h4><p>음성 및 언어 연구를 위한 공개 데이터 리소스이다. 본 프로젝트에서는 미얀마어 음성 인식 데이터를 사용한다.</p></article>
+          <article class="source-card"><span class="source-count">2,822 samples</span><h4>MIG Burmese Audio Transcription</h4><p>미얀마어 음성과 해당 전사문으로 구성된 음성-텍스트 데이터셋으로, 미얀마어 음성 인식 학습에 활용된다.</p></article>
+        </div>
+
+        <h4 class="dataset-subtitle">데이터 구성</h4>
+        <div class="table-wrap compact-table"><table><tbody>
+          <tr><td><code>audio</code></td><td>입력 미얀마어 음성</td></tr>
+          <tr><td><code>transcription</code></td><td>음성에 대한 정답 미얀마어 전사문</td></tr>
+          <tr><td><code>source</code></td><td>FLEURS / OpenSLR / MIG 데이터 출처</td></tr>
+        </tbody></table></div>
+      </div>
+
+      <div class="dataset-block processed-block">
+        <div class="dataset-heading-row">
+          <div>
+            <span class="dataset-label">PROCESSED DATASET</span>
+            <h3>Challenge Processed Dataset</h3>
+          </div>
+          <a class="btn btn-primary" href="https://drive.google.com/drive/folders/1GFnM6_dJbTXxQaRJFIgINHzdhqi1tBw1?hl=ko" target="_blank" rel="noopener noreferrer">View Google Drive Files</a>
+        </div>
+
+        <div class="processed-explanation" lang="ko">
+          <p>원본 Hugging Face 데이터셋은 <strong>미얀마어 음성과 미얀마어 전사문</strong>을 제공하며, 기본적인 미얀마어 음성 인식(ASR)에 사용할 수 있다.</p>
+          <p>하지만 본 Challenge에서는 미얀마어 음성 인식뿐만 아니라 <strong>영어 및 한국어 Speech-to-Text Translation</strong>도 수행한다.</p>
+          <p>따라서 Challenge의 각 Task에서 바로 사용할 수 있도록 원본 데이터를 전처리하고, <strong>Myanmar / English / Korean</strong> 데이터로 구분하여 제공한다.</p>
+        </div>
+
+        <h4 class="dataset-subtitle">파일별 구성 및 활용</h4>
+        <div class="language-file-grid">
+          <article class="language-file-card"><h4>Myanmar</h4><code>train-myanmar.parquet</code><p>미얀마어 음성을 <strong>미얀마어 텍스트로 인식(ASR)</strong>하는 모델 학습</p></article>
+          <article class="language-file-card"><h4>English</h4><code>train-english.parquet</code><p>미얀마어 음성을 <strong>영어 텍스트로 변환</strong>하는 모델 학습</p></article>
+          <article class="language-file-card"><h4>Korean</h4><code>train-korean.parquet</code><p>미얀마어 음성을 <strong>한국어 텍스트로 변환</strong>하는 모델 학습</p></article>
+        </div>
+
+        <div class="split-note" lang="ko">
+          <div><strong>Training</strong><code>train-*.parquet</code><span>모델 학습에 사용</span></div>
+          <div><strong>Validation</strong><code>validation-*.parquet</code><span>학습된 모델의 성능 확인에 사용</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="leaderboard">
+      <h2>03 — Leaderboard</h2>
+      
+      
+      <div class="leaderboard-language-block">
+        <h3 class="leaderboard-language-title">English Results</h3>
+        <div class="table-wrap">
+          <table class="language-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>ASR CER ↓</th>
+                <th>BLEU ↑</th>
+                <th>chrF++ ↑</th>
+              </tr>
+            </thead>
+            <tbody id="englishLeaderboardRows">
+              <tr><td colspan="4">Loading scores...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="leaderboard-language-block">
+        <h3 class="leaderboard-language-title">Korean Results</h3>
+        <div class="table-wrap">
+          <table class="language-table">
+            <thead>
+              <tr>
+                <th>Model</th>
+                <th>ASR CER ↓</th>
+                <th>BLEU ↑</th>
+                <th>chrF++ ↑</th>
+              </tr>
+            </thead>
+            <tbody id="koreanLeaderboardRows">
+              <tr><td colspan="4">Loading scores...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <p class="note" id="leaderboardStatus" style="display:none"></p>
+
+    
+      <div class="leaderboard-submit-guide">
+        <h3>결과 제출 방법</h3>
+        <p>Challenge에 참여한 사용자는 제공된 Evaluation Dataset과 Evaluation Code를 사용하여 모델의 성능을 평가한 후 결과를 제출할 수 있다.</p>
+
+        <div class="submit-steps">
+          <div class="submit-step">
+            <span class="step-no">01</span>
+            <strong>모델 평가</strong>
+            <p>제공된 Evaluation Dataset을 사용하여 모델을 평가한다.</p>
+          </div>
+          <div class="submit-step">
+            <span class="step-no">02</span>
+            <strong>점수 계산</strong>
+            <p>제공된 Evaluation Code를 사용하여 <b>ASR CER, BLEU, chrF++</b> 점수를 계산한다.</p>
+          </div>
+          <div class="submit-step">
+            <span class="step-no">03</span>
+            <strong>결과 추가</strong>
+            <p><b>Speech-Recognition-Challenge-2026 GitHub Repository의 메인 폴더(root)</b>에 있는 <code>leaderboard.csv</code> 파일에 <b>Model, Language, ASR CER, BLEU, chrF++</b> 결과를 추가한다.</p>
+          </div>
+          <div class="submit-step">
+            <span class="step-no">04</span>
+            <strong>Pull Request 제출</strong>
+            <p>수정한 <code>leaderboard.csv</code> 파일을 <b>Speech-Recognition-Challenge-2026 GitHub Repository</b>에 Pull Request로 제출한다.</p>
+          </div>
+          <div class="submit-step">
+            <span class="step-no">05</span>
+            <strong>Leaderboard 반영</strong>
+            <p>제출된 결과가 확인되고 Pull Request가 승인되면 해당 결과가 웹사이트 Leaderboard에 반영된다.</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <section id="evaluation">
+      <h2>04 — Evaluation</h2>
+      <p class="section-desc">모든 모델은 동일한 평가 방식과 Evaluation Code를 사용하여 미얀마어 음성 인식 및 영어·한국어 번역 성능을 평가한다.</p>
+
+      <div class="card evaluation-card" style="margin-top:20px; padding:24px;">
+        <h3 class="evaluation-label">ASR CER ↓</h3>
+        <p><strong>Myanmar Speech → Myanmar Text</strong></p>
+        <p>미얀마어 음성을 텍스트로 변환한 결과를 정답 미얀마어 전사문과 비교하여 문자 단위 오류를 계산한다.</p>
+        <div style="margin:20px 0; padding:20px; text-align:center; background:#f5f8fc; border:1px solid #dbe5f1; border-radius:10px;">
+          <div style="font-size:1.35rem; font-weight:700;">CER = (S + D + I) / N</div>
+          <div style="margin-top:12px; font-size:.95rem;">S = Substitution &nbsp; · &nbsp; D = Deletion &nbsp; · &nbsp; I = Insertion &nbsp; · &nbsp; N = Reference characters</div>
+        </div>
+        <div style="margin:18px 0; padding:18px; background:#fff; border:1px solid #dbe5f1; border-radius:10px;">
+          <strong>계산 예시</strong>
+          <div style="margin-top:10px; line-height:1.8; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:.92rem;">
+            Reference : ABCDE<br>
+            Prediction: ABXDE<br><br>
+            S = 1, D = 0, I = 0, N = 5<br>
+            CER = (1 + 0 + 0) / 5 = <strong>0.20</strong>
+          </div>
+        </div>
+        <p><strong>↓ Lower is better.</strong> CER = 0이면 예측 결과가 정답 전사문과 문자 단위로 일치합니다.</p>
+      </div>
+
+      <div class="grid" style="margin-top:18px;">
+        <article class="card evaluation-card" style="padding:24px;">
+          <h3 class="evaluation-label">BLEU ↑</h3>
+          <p><strong>English / Korean Translation</strong></p>
+          <p><strong>Prediction ↔ Reference</strong></p>
+          <p>모델이 생성한 영어·한국어 번역과 정답 번역을 비교하며, 주로 단어 n-gram의 일치 정도를 기반으로 평가한다.</p>
+          <div style="margin:16px 0; padding:16px; background:#fff; border:1px solid #dbe5f1; border-radius:10px; line-height:1.75;">
+            <strong>예시</strong><br>
+            Reference: I like this book.<br>
+            Prediction: I like this book.<br>
+            <span style="font-size:.92rem;">단어 배열이 많이 일치할수록 BLEU 점수가 높아진다.</span>
+          </div>
+          <p><strong>↑ Higher is better.</strong></p>
+        </article>
+
+        <article class="card evaluation-card" style="padding:24px;">
+          <h3 class="evaluation-label">chrF++ ↑</h3>
+          <p><strong>English / Korean Translation</strong></p>
+          <p><strong>Prediction ↔ Reference</strong></p>
+          <p>모델이 생성한 영어·한국어 번역과 정답 번역을 비교하며, 문자 n-gram과 단어 n-gram을 기반으로 유사도를 평가한다.</p>
+          <div style="margin:16px 0; padding:16px; background:#fff; border:1px solid #dbe5f1; border-radius:10px; line-height:1.75;">
+            <strong>예시</strong><br>
+            Reference: I like this book.<br>
+            Prediction: I like the book.<br>
+            <span style="font-size:.92rem;">문자와 단어의 유사도가 높을수록 chrF++ 점수가 높아진다.</span>
+          </div>
+          <p><strong>↑ Higher is better.</strong></p>
+        </article>
+      </div>
+
+      <p class="note" style="margin-top:18px;">정확한 CER, BLEU 및 chrF++ 점수는 제공된 Evaluation Code를 사용하여 동일한 방식으로 계산한다.</p>
+      <div style="margin-top:18px"><a class="btn btn-primary" href="https://github.com/AyeChannPhyo/Speech-Recognition-Challenge-2026/blob/main/evaluation_code/Evaluation_Colab.ipynb" target="_blank" rel="noopener noreferrer">View Evaluation Code</a></div>
+    </section>
+
+    <section id="resources">
+      <div class="section-head">
+        <h2>05 — GitHub &amp; Resources</h2>
+        <p>GitHub 저장소, 베이스라인 코드, 데이터셋 및 평가 코드</p>
+      </div>
+
+      <div class="resources-three-grid">
+        <div class="resource-card">
+          <h3>Baseline Code</h3>
+          <p>Challenge의 기본 모델을 직접 실행하고 음성 인식 및 번역 결과를 확인할 수 있는 Google Colab 코드이다.</p>
+          <a class="btn btn-primary" href="https://github.com/AyeChannPhyo/Speech-Recognition-Challenge-2026/tree/main/baseline" target="_blank" rel="noopener">View Baseline Notebooks</a>
+        </div>
+
+        <div class="resource-card">
+          <h3>Dataset</h3>
+          <p>모델을 학습하고 평가할 때 사용하는 미얀마어 음성 데이터와 전처리된 영어·한국어 데이터를 확인할 수 있다.</p>
+          <div class="resource-buttons">
+            <a class="btn btn-primary" href="https://huggingface.co/datasets/chuuhtetnaing/myanmar-speech-dataset-for-asr" target="_blank" rel="noopener">View Dataset</a>
+            <a class="btn btn-primary" href="https://drive.google.com/drive/folders/1GFnM6_dJbTXxQaRJFIgINHzdhqi1tBw1?hl=ko" target="_blank" rel="noopener">Processed Data</a>
+          </div>
+        </div>
+
+        <div class="resource-card">
+          <h3>Evaluation Code</h3>
+          <p>모델이 얼마나 잘 동작하는지 확인하고 ASR CER, BLEU, chrF++ 점수를 계산할 수 있는 Google Colab 평가 코드이다.</p>
+          <a class="btn btn-primary" href="https://github.com/AyeChannPhyo/Speech-Recognition-Challenge-2026/blob/main/evaluation_code/Evaluation_Colab.ipynb" target="_blank" rel="noopener">View Evaluation Code</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="footer-inner"><div><strong>Speech Recognition Challenge 2026</strong></div><div class="nav-links"><a href="#overview">Overview</a><a href="#dataset">Dataset</a><a href="#leaderboard">Leaderboard</a><a href="#evaluation">Evaluation</a><a href="#resources">Resources</a></div></div></footer>
+  <script>
+  const englishTbody = document.getElementById('englishLeaderboardRows');
+  const koreanTbody = document.getElementById('koreanLeaderboardRows');
+  const status = document.getElementById('leaderboardStatus');
+
+  function parseCSV(text) {
+    const rows = []; let row = [], field = '', quoted = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (c === '"') {
+        if (quoted && text[i + 1] === '"') { field += '"'; i++; }
+        else quoted = !quoted;
+      } else if (c === ',' && !quoted) {
+        row.push(field); field = '';
+      } else if ((c === '\n' || c === '\r') && !quoted) {
+        if (c === '\r' && text[i + 1] === '\n') i++;
+        row.push(field);
+        if (row.some(v => v.trim())) rows.push(row);
+        row = []; field = '';
+      } else {
+        field += c;
+      }
+    }
+    row.push(field);
+    if (row.some(v => v.trim())) rows.push(row);
+
+    const headers = (rows.shift() || []).map(v => v.trim().toLowerCase());
+    return rows.map(values =>
+      Object.fromEntries(headers.map((h, i) => [h, (values[i] || '').trim()]))
+    );
+  }
+
+  function renderLanguageTable(tbody, rows) {
+    tbody.replaceChildren();
+
+    const ordered = [...rows].sort((a, b) => {
+      const chrfA = Number.isFinite(a.chrf) ? a.chrf : -Infinity;
+      const chrfB = Number.isFinite(b.chrf) ? b.chrf : -Infinity;
+      return chrfB - chrfA;
+    });
+
+    if (!ordered.length) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = 4;
+      td.textContent = 'No results yet';
+      tr.append(td);
+      tbody.append(tr);
+      return;
+    }
+
+    ordered.forEach((r, index) => {
+      const tr = document.createElement('tr');
+
+      if (index === 0) {
+        tr.classList.add('best-row');
+      }
+
+      const modelTd = document.createElement('td');
+      modelTd.textContent = r.model;
+
+      const cerTd = document.createElement('td');
+      cerTd.textContent = Number.isFinite(r.cer) ? r.cer.toFixed(3) : '—';
+
+      const bleuTd = document.createElement('td');
+      bleuTd.textContent = Number.isFinite(r.bleu) ? r.bleu.toFixed(3) : '—';
+
+      const chrfTd = document.createElement('td');
+      chrfTd.textContent = Number.isFinite(r.chrf) ? r.chrf.toFixed(3) : '—';
+
+      tr.append(modelTd, cerTd, bleuTd, chrfTd);
+      tbody.append(tr);
+    });
+  }
+
+  async function loadScores() {
+    try {
+      const response = await fetch('leaderboard.csv', { cache: 'no-store' });
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+
+      const results = parseCSV(await response.text()).map(x => ({
+        model: x.model || 'Unnamed model',
+        language: (x.language || '').trim(),
+        cer: x.cer === '' || x.cer === undefined ? NaN : Number(x.cer),
+        bleu: x.bleu === '' || x.bleu === undefined ? NaN : Number(x.bleu),
+        chrf: x.chrf === '' || x.chrf === undefined ? NaN : Number(x.chrf)
+      }));
+
+      const englishRows = results.filter(r => r.language.toLowerCase() === 'english');
+      const koreanRows = results.filter(r => r.language.toLowerCase() === 'korean');
+
+      renderLanguageTable(englishTbody, englishRows);
+      renderLanguageTable(koreanTbody, koreanRows);
+      status.textContent = '';
+    } catch (error) {
+      [englishTbody, koreanTbody].forEach(tbody => {
+        tbody.replaceChildren();
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 4;
+        td.textContent = 'Unable to load scores.';
+        tr.append(td);
+        tbody.append(tr);
+      });
+      status.textContent = '';
+    }
+  }
+
+  loadScores();
+
+  // Switch between views without creating additional HTML files.
+  const pageIds = ['overview', 'dataset', 'leaderboard', 'evaluation', 'resources'];
+  function showPage() {
+    const hash = decodeURIComponent(location.hash.slice(1)).toLowerCase();
+    const current = pageIds.includes(hash) ? hash : 'overview';
+    document.querySelectorAll('main > section').forEach(section => {
+      const active = section.id === current;
+      section.classList.toggle('is-active', active);
+      section.hidden = !active;
+    });
+    document.querySelectorAll('.nav-links a').forEach(link => {
+      if (link.getAttribute('href') === '#' + current) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+    });
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener('hashchange', showPage);
+  showPage();
+
+  </script>
+</body>
+</html>
